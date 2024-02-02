@@ -5,6 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "db:setup": "tsx -r dotenv/config database/setup.ts",
     "start": "nodemon"
   },
   "author": "Anup Poudel",

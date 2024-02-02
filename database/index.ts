@@ -4,7 +4,6 @@ import config from "../config";
 const pool = new Pool({
   host: config.DB.HOST,
   user: config.DB.USER,
-  database: config.DB.NAME,
   password: config.DB.PASS,
   port: Number(config.DB.PORT),
   max: 20,
