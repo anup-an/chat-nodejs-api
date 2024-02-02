@@ -1,11 +1,12 @@
-import { IncomingMessage, ServerResponse } from "http";
+import BaseController from "./controllers/baseController";
+import User from "./models/user";
 
 const routes = [
   {
     method: "POST",
     path: "/register",
     type: "public",
-    handler: (req: IncomingMessage, res: ServerResponse) => null,
+    handler: new BaseController(new User()).create,
   },
 ];
 
