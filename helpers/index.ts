@@ -1,4 +1,4 @@
-import { ServerResponse } from "http";
+import { IncomingMessage, ServerResponse } from "http";
 
 export const handleError = (error: any, res: ServerResponse, statusCode = 500) => {
   res.setHeader("Content-Type", "application/json");
@@ -15,3 +15,20 @@ export const handleSuccess = (res: ServerResponse, data: any = null) => {
   res.statusCode = 200;
   res.end(JSON.stringify({ data }));
 };
+
+export const getRequestBody = (req: IncomingMessage) => {
+  return new Promise((resolve, reject) => {
+    try {
+      let body = "";
+      req.on("data", (chunk) => {
+        body += chunk.toString();
+      });
+
+      req.on("end", () => {
+        resolve(JSON.parse(body));
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+}
