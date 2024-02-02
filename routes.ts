@@ -6,7 +6,7 @@ const routes = [
     method: "POST",
     path: "/register",
     type: "public",
-    handler: new BaseController(new User()).create,
+    handler: new BaseController(new User()).create.bind(new BaseController(new User())),
   },
 ];
 

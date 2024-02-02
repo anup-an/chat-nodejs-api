@@ -3,7 +3,6 @@ import { omitFields, pascalToSnakeCase } from "../utils";
 import DB from ".";
 
 export default class Model<T> {
-  [x: string]: any;
   id?: number;
 
   readonly table = pluralize(pascalToSnakeCase(this.constructor.name));
@@ -14,8 +13,8 @@ export default class Model<T> {
 
   async save(): Promise<T> {
     let queryText: string;
-    let modelObject = omitFields(this, ["table"]);
-    modelObject = { ...this, updated_at: "NOW()" };
+    let modelObject = omitFields(this, this.id ? ["table"]: ["table", "id"]);
+    modelObject = { ...modelObject, updated_at: "NOW()" };
 
     if (!this.id) {
       modelObject = { ...modelObject, created_at: "NOW()" };
@@ -23,14 +22,13 @@ export default class Model<T> {
 
     const keys = Object.keys(modelObject);
     const values = Object.values(modelObject);
-    const valueRefs = values.map((_value, index) => `$${index + 1}`);
-
+      const valueRefs = values.map((_value, index) => `$${index + 1}`);
     if (this.id) {
       queryText = `UPDATE ${this.table} SET (${keys}) = (${valueRefs}) WHERE id=${this.id} RETURNING *;`;
     } else {
       queryText = `INSERT INTO ${this.table} (${keys}) VALUES (${valueRefs}) RETURNING *;`;
     }
-
+    
     const query = { text: queryText, values };
     return DB.query(query).then((response) => response.rows[0] as T);
   }
@@ -38,6 +36,6 @@ export default class Model<T> {
   create<T>(props: Partial<T>): Model<T> {
     const instance = this;
     Object.assign(instance, props);
-    return (instance as unknown) as Model<T>;
+    return instance as unknown as Model<T>;
   }
 }
