@@ -1,11 +1,15 @@
 import http, { IncomingMessage, ServerResponse } from "http";
 import router from "./router";
+import { handleError, handleSuccess } from "./helpers";
 
 const server = http.createServer(
-  (req: IncomingMessage, res: ServerResponse) => {
-    res.setHeader("Content-Type", "application/json");
-    res.statusCode = 200;
-    res.end("success");
+  async (req: IncomingMessage, res: ServerResponse) => {
+    try {
+      const result = await router(req, res);
+      handleSuccess(res, result);
+    } catch (error) {
+      handleError(error, res);
+    }
   }
 );
 
