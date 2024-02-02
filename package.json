@@ -1,0 +1,28 @@
+{
+  "name": "chat-nodejs-api",
+  "version": "1.0.0",
+  "description": "NodeJS chat api",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon"
+  },
+  "author": "Anup Poudel",
+  "license": "ISC",
+  "devDependencies": {
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@types/node": "^20.11.15",
+    "@types/pg": "^8.11.0",
+    "@types/pluralize": "^0.0.33",
+    "nodemon": "^3.0.3",
+    "pg": "^8.11.3",
+    "pluralize": "^8.0.0"
+  },
+  "nodemonConfig": {
+    "exec": "npx tsx index.ts",
+    "ext": "ts,js"
+  }
+}
