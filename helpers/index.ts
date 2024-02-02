@@ -1,13 +1,34 @@
 import { IncomingMessage, ServerResponse } from "http";
 
-export const handleError = (error: any, res: ServerResponse, statusCode = 500) => {
+export class NotFoundError extends Error {
+  statusCode: number;
+  constructor(message: string) {
+    super(message);
+    this.name = "NotFoundError";
+    this.statusCode = 404;
+  }
+}
+
+export class ServerError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "ServerError";
+  }
+}
+
+export const handleError = (
+  error: any,
+  res: ServerResponse,
+  statusCode = 500
+) => {
   res.setHeader("Content-Type", "application/json");
-  const responseObject = {
+  const errorResponseObject = {
     title: error.name || "ServerError",
     description: error.message || "Something went wrong. Please try again.",
     stack: process.env.NODE_ENV === "development" ? error.stack : {},
   };
-  res.statusCode = statusCode;
+  res.statusCode = error.statusCode || statusCode;
+  res.end(JSON.stringify(errorResponseObject));
 };
 
 export const handleSuccess = (res: ServerResponse, data: any = null) => {
@@ -31,4 +52,4 @@ export const getRequestBody = (req: IncomingMessage) => {
       reject(e);
     }
   });
-}
+};
